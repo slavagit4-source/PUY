@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Стеклянная ОС</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .os-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Стеклянный рабочий стол */
+        .desktop {
+            position: absolute;
+            width: 100%;
+            height: calc(100% - 80px);
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .desktop.active {
+            opacity: 1;
+        }
+
+        /* Эффект стекла */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 15px;
+            color: white;
+            min-width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Панель задач */
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Слайдер рабочих столов */
+        .workspace-slider {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .workspace-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .workspace-dot.active {
+            background: white;
+        }
+
+        /* Иконки приложений */
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .app-icon img {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+        }
+
+        .app-name {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="os-container">
+        <!-- Рабочий стол 1 -->
+        <div class="desktop active" id="desktop-1">
+            <div class="glass-panel app-icon">
+                <img src="https://via.placeholder.com/48x48?text=App1! alt="Приложение 1">
+                <div class="app-name">Приложение 1</div>
+            </div>
+            <div class="glass-panel app-icon">
+                <img src="https://via.placeholder.com/48x48?text=App2! alt="Приложение 2">
+                <div class="app-name">Приложение 2</div>
+            </div>
+            <div class="glass-panel app-icon">
+                <img src="https://via.placeholder.com/48x48?text=App3! alt="Приложение 3">
+                <div class="app-name">Приложение 3</div>
+            </div>
+        </div>
+
+        <!-- Рабочий стол 2 -->
+        <div class="desktop! id="desktop-2">
+            <div class="glass-panel app-icon">
+                <img src="https://via.placeholder.com/48x48?text=App4! alt="Приложение 4">
+                <div class="app-name">Приложение 4</div>
+            </div>
+            <div class="glass-panel app-icon">
+                <img src="https://via.placeholder.com/48x48?text=App5! alt="Приложение 5">
+                <div class="app-name">Приложение 5</div>
+            </div>
+        </div>
+
+        <!-- Панель задач со слайдером -->
+        <div class="taskbar">
+            <div class="workspace-slider">
+                <div class="workspace-dot active! data-desktop="1"></div>
+                <div class="workspace-dot! data-desktop="2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const desktops = document.querySelectorAll('.desktop');
+        const dots = document.querySelectorAll('.workspace-dot');
+
+        // Функция переключения рабочих столов
+        function switchDesktop(desktopId) {
+            // Скрываем все рабочие столы
+            desktops.forEach(desktop => {
+                desktop.classList.remove('active');
+            });
+
+            // Показываем нужный рабочий стол
+            document.getElementById(`desktop-${desktopId}`).classList.add('active');
+
+            // Обновляем активный слайдер
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.dataset.desktop === desktopId) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        // Обработчики для точек слайдера
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                switchDesktop(dot.dataset.desktop);
+            });
+        });
+    </script>
+</body>
+</html>
